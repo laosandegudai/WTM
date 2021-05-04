@@ -52,6 +52,9 @@ namespace WalkingTec.Mvvm.Mvc
             , bool _DONOT_USE_MULTI_SEL
             , string _DONOT_USE_SEL_ID
             , string _DONOT_USE_SUBMIT
+            , string _DONOT_USE_LINK_FIELD_MODEL
+            , string _DONOT_USE_LINK_FIELD
+            , string _DONOT_USE_TRIGGER_URL
         )
         {
             var listVM = CreateVM(_DONOT_USE_VMNAME, null, null, true) as IBasePagedListVM<TopBasePoco, ISearcher>;
@@ -71,6 +74,9 @@ namespace WalkingTec.Mvvm.Mvc
             ViewBag.MultiSel = _DONOT_USE_MULTI_SEL;
             ViewBag.SelId = _DONOT_USE_SEL_ID;
             ViewBag.SubmitFunc = _DONOT_USE_SUBMIT;
+            ViewBag.LinkFieldModel = _DONOT_USE_LINK_FIELD_MODEL;
+            ViewBag.LinkField = _DONOT_USE_LINK_FIELD;
+            ViewBag.TriggerUrl = _DONOT_USE_TRIGGER_URL;
 
             #region 获取选中的数据
             ViewBag.SelectData = "[]";
@@ -272,11 +278,11 @@ namespace WalkingTec.Mvvm.Mvc
             var rv = string.Empty;
             if (ConfigInfo.IsQuickDebug == true)
             {
-                rv = ex.Error.ToString().Replace(Environment.NewLine, "</br>");
+                rv = ex.Error.ToString().Replace(Environment.NewLine, "<br />");
             }
             else
             {
-                rv = ex.Error.Message.Replace(Environment.NewLine, "</br>"); ;
+                rv = ex.Error.Message.Replace(Environment.NewLine, "<br />"); ;
             }
             return BadRequest(rv);
         }
@@ -429,6 +435,7 @@ namespace WalkingTec.Mvvm.Mvc
             if (ext == "mp4")
             {
                 contenttype = $"video/mpeg4";
+                return File(data, contenttype, enableRangeProcessing: true);
             }
             if (stream == false)
             {
@@ -460,6 +467,10 @@ namespace WalkingTec.Mvvm.Mvc
             <param name=""SRC"" value=""/_Framework/GetFile?id={id}&stream=true"">
            </object>
             ";
+            }
+            else if (vm.Entity.FileExt.ToLower() == "mp4")
+            {
+                html = $@"<video id='FileObject' controls='controls' style='{(string.IsNullOrEmpty(width) ? "" : $"width:{width}px")}'  border=0 src='/_Framework/GetFile?id={id}&stream=true&_DONOT_USE_CS={_DONOT_USE_CS}'></video>";
             }
             else
             {
@@ -559,7 +570,7 @@ namespace WalkingTec.Mvvm.Mvc
             foreach (var menu in menus)
             {
                     RemoveEmptyMenu(menu.Children);
-                    if ((menu.Children == null || menu.Children.Count == 0) && (menu.Url == null))
+                    if ((menu.Children == null || menu.Children.Count == 0) && (string.IsNullOrEmpty( menu.Url)))
                     {
                         toRemove.Add(menu);
                     }

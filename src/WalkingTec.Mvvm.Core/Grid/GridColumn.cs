@@ -73,7 +73,10 @@ namespace WalkingTec.Mvvm.Core
         /// 列宽
         /// </summary>
         public int? Width { get; set; }
-
+        /// <summary>
+        /// //监听单元格事件
+        /// </summary>
+        public string Event { get; set; }
         /// <summary>
         /// 是否允许排序
         /// </summary>
@@ -361,6 +364,19 @@ namespace WalkingTec.Mvvm.Core
             else
             {
                 return BackGroundFunc.Invoke(source as T);
+            }
+        }
+
+
+        public bool HasFormat()
+        {
+            if(Format != null)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

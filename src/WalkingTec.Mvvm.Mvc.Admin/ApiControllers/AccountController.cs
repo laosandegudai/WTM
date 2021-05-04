@@ -28,6 +28,7 @@ namespace WalkingTec.Mvvm.Admin.Api
     [Route("api/_[controller]")]
     [Route("api/_login")]
     [ActionDescription("Login")]
+    [AllRights]
     public class AccountController : BaseApiController
     {
         private readonly ILogger _logger;
@@ -174,7 +175,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             return await _authService.RefreshTokenAsync(refreshToken);
         }
 
-        [AllRights]
+        [Public]
         [HttpGet("[action]/{id}")]
         public IActionResult CheckLogin(Guid? id)
         {
@@ -195,9 +196,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var ms = new List<SimpleMenu>();
                 var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
                 var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
-                var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
-
-                var allowed = DC.Set<FunctionPrivilege>()
+                var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList(); var allowed = DC.Set<FunctionPrivilege>()
                                 .AsNoTracking()
                                 .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
                                 .Select(x => new { x.MenuItem.ID, x.MenuItem.Url })
@@ -230,7 +229,7 @@ namespace WalkingTec.Mvvm.Admin.Api
             }
         }
 
-        [AllRights]
+        [Public]
         [HttpGet("[action]")]
         public IActionResult CheckUserInfo()
         {
@@ -251,8 +250,7 @@ namespace WalkingTec.Mvvm.Admin.Api
                 var ms = new List<SimpleMenu>();
                 var roleIDs = LoginUserInfo.Roles.Select(x => x.ID).ToList();
                 var data = DC.Set<FrameworkMenu>().Where(x => x.MethodName == null).ToList();
-                var topdata = data.Where(x => x.ParentId == null).ToList().FlatTree(x => x.DisplayOrder).Where(x => x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)).ToList();
-
+                var topdata = data.Where(x => x.ParentId == null && x.ShowOnMenu).ToList().FlatTree(x => x.DisplayOrder).Where(x => (x.IsInside == false || x.FolderOnly == true || string.IsNullOrEmpty(x.MethodName)) && x.ShowOnMenu).ToList();
                 var allowed = DC.Set<FunctionPrivilege>()
                                 .AsNoTracking()
                                 .Where(x => x.UserId == LoginUserInfo.Id || (x.RoleId != null && roleIDs.Contains(x.RoleId.Value)))
@@ -315,9 +313,9 @@ namespace WalkingTec.Mvvm.Admin.Api
         [HttpGet("[action]/{id}")]
         public async Task Logout(Guid? id)
         {
+            await LoginUserInfo.RemoveUserCache(LoginUserInfo.Id.ToString());
             HttpContext.Session.Clear();
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            HttpContext.Response.Redirect("/");
         }
 
 
