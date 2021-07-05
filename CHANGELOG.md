@@ -1,6 +1,54 @@
 # 更新日志
 ## v5.x.x 
 
+##5.2.7 (2021-7-4) 
+* **修改：**  修复了layui模式下表单错误的显示位置问题
+* **修改：**  修复了初始化默认数据有可能报错的问题
+* **修改：**  TokenService现在会默认使用名为tokendefault的连接字符串，便于将token相关表保存在其他数据库或内存中
+
+##5.2.6 (2021-6-27) 
+* **修改：**  修复了layui模式下设置组件style和class有时无效的问题
+* **修改：**  Layui模式下添加了wt:card组件
+* **修改：**  修复了Wtm中的Cache依赖HttpContext的问题
+
+##5.2.5 (2021-6-20) 
+* **修改：**  修复了layui模式下slider控件无法提交的bug
+* **修改：**  修复了GetSelectListItems and GetTreeSelectListItems 方法在sqlite下有可能引发错误的bug
+
+##5.2.4 (2021-6-9) 
+* **修改：**  修复了Layui的Selector读取数据的bug
+* **修改：**  修复了Layui的Display没有自动换行的问题
+* **修改：**  修改了Blazor项目默认代码，更新了BB版本，并修复了访问不存在的地址会报错的问题
+
+##5.2.3 (2021-6-1) 
+* **修改：**  修复了项目默认代码Blazor模式中配置角色页面权限的bug
+* **修改：**  修复了项目默认代码删除用户时没有同时删除角色及用户组关联数据的bug
+* **修改：**  修复了项目默认代码LoginJwt方法对密码进行了小写操作的bug
+* **修改：**  修复了Layui模式中Selector控件只能绑定id值的bug
+* **修改：**  默认生成的Blazor项目更改为server模式
+
+##5.2.2 (2021-5-24) 
+* **修改：**  修复了代码生成器生成单元测试的一些bug
+* **修改：**  优化了DC.RunSql函数，现在可以在事务中间使用DC.RunSql
+* **修改：**  更新了默认项目中的FrameworkUserVM，使其在修改和删除用户时刷新用户权限缓存。
+* **修改：**  更新了Blazor项目默认代码，修复了修改密码无法找到Api的问题，修复了wasm模式中必须指定后台地址的问题
+* **修改：**  修复了Layui模式中Selecor设置disable无效的问题
+* **修改：**  Layui模式中，子表Grid单元格编辑时，现在可以设置SetEditType(EditTypeEnum.Datetime)来支持日期选择
+* **修改：**  优化了数据唯一性的查询语句，修复了mysql中生成的语句报错的问题
+
+##5.2.1 (2021-5-15) 
+* **修改：**  修复了代码生成器生成中间表相关ViewModel和页面错误的bug
+* **修改：**  修复了BaseCrudVM中默认修改方法没有过滤掉[NotMapped]字段的错误
+
+##5.2.0 (2021-5-14) 
+* **新增：**  新增对Blazor的支持，现在可以在官网生成Blazor模式的项目，代码生成器现在也可以生成Blazor的代码，具体请见文档http://wtmdoc.walkingtec.cn/#/Blazor/Intro
+* **新增：**  [ActionDescription]中加入了IsPage属性，设置了这个属性的方法可以在菜单管理中添加，解决了一个Controller下只能配置一个主页面的问题
+* **修改：**  修改了代码生成器的一些内部实现
+* **修改：**  修复了默认代码中非管理员设置数据权限出现的错误
+* **修改：**  修复了DynamicDataConverter读取数据报错的问题
+* **修改：**  修复了在配置文件中将jwt的SecurityKey设置的过短会报错的问题
+* **修改：**  修复了Layui模式下，搜索框折叠后下方列表错位的问题
+
 ##5.1.9 (2021-4-30) 
 * **修改：**  移除了默认的 wt:grid onedit 方法重载，用户可以自己写js来实现功能
 * **修改：**  修复了OssFileHandler读取文件时没有正确使用groupname的问题
